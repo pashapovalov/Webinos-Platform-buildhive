@@ -12,7 +12,7 @@
   <url>http://www.webinos.org</url>
 
   <artifactId>api</artifactId>
-  <packaging>pom <!--</packaging> -->
+  <packaging>pom</packaging>
   <modules>
     <!-- One module tag per child module -->
     <!--<module>attestation</module>-->
