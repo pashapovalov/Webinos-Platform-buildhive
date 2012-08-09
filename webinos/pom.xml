@@ -33,19 +33,6 @@
   </properties>
   -->
 
-  <repositories>
-    <repository>
-      <id>jsdoctk1</id>
-      <url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>jsdoctk2</id>
-      <url>http://jsdoctk-plugin.googlecode.com/svn/repo</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <plugins>
         <!-- Plugin to add delete path to build cycle (clean phase) -->
@@ -246,6 +233,7 @@
 
   <!-- Reporting -->
   <reporting>
+    <!--
     <plugins>
       <!-- Generate JsDoc documentation -->
       <plugin>
@@ -267,5 +255,6 @@
         </configuration>
       </plugin>
     </plugins>
+    -->
   </reporting>
 </project>
