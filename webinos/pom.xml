@@ -1,19 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
-  <parent>
-    <groupId>org.webinos</groupId>
-    <artifactId>webinos-root</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  
   <modelVersion>4.0.0</modelVersion>
-  
-  <!--  
+
   <groupId>org.webinos</groupId>
+  <artifactId>webinos</artifactId>
   <version>1.0-SNAPSHOT</version>
-  -->
-  <artifactId>webinos</artifactId>  
   <packaging>pom</packaging>
 
   <modules>
@@ -27,35 +18,33 @@
   <name>webinos</name>
   <url>http://www.webinos.org</url>
 
-  <!--
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  -->
 
   <build>
     <plugins>
-        <!-- Plugin to add delete path to build cycle (clean phase) -->
-        <plugin>
+      <!-- Plugin to add delete path to build cycle (clean phase) -->
+      <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>2.4.1</version>
         <configuration>
           <filesets>
-          <fileset>
-            <directory>reports</directory>
-          </fileset>
-          <fileset>
-            <directory>src/build</directory>
-          </fileset>
-          <fileset>
-            <directory>src</directory>
-            <includes>
-            <include>**/.lock-wscript</include>
-            </includes>
-          </fileset>
+            <fileset>
+              <directory>reports</directory>
+            </fileset>
+            <fileset>
+              <directory>src/build</directory>
+            </fileset>
+            <fileset>
+              <directory>src</directory>
+              <includes>
+              <include>**/.lock-wscript</include>
+              </includes>
+            </fileset>
           </filesets>
         </configuration>
-        </plugin>
+      </plugin>        
     </plugins>
   </build>
   
@@ -100,8 +89,9 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>exec-maven-plugin</artifactId>
+              <version>1.1</version>
               <executions>
-               <!-- Builds C files to node modules with gyp. 
+                <!-- Builds C files to node modules with gyp. 
                     Requires the webinos.gyp file in location tools/gyp_tools/ -->         
                <execution>
                 <id>compile-node-module</id>
@@ -134,7 +124,42 @@
                     <param>1</param>
                   </successCodes>
                 </configuration>
-              </execution>
+               </execution>
+               <!-- Create documentation from the jsdoc comments. Documentation will placed to folder 'jsdoc'. -->
+               <execution>
+                 <id>jsdoc</id>
+                 <phase>site</phase>
+                 <configuration>
+                   <executable>jsdoc.cmd</executable>
+                   <arguments>
+                     <argument>-r</argument>
+                     <argument>-d</argument>
+                     <argument>${basedir}/target/site/jsdoc</argument>
+                     <argument>${basedir}/lib/</argument>
+                   </arguments>
+                   <successCodes>
+                     <param>0</param>
+                     <param>1</param>
+                   </successCodes>
+                  </configuration>
+               </execution> 
+               <!-- Runs vows node tests specified in file 'test.spec.js' in the vows test folder -->
+               <execution>
+                <id>vows-testing</id>
+                <phase>test</phase>
+                <configuration>
+                  <executable>vows</executable>
+                  <arguments>
+                    <argument>test/vows/test.spec.js</argument>
+                    <argument>--xunit</argument>
+                  </arguments>
+                  <outputFile>${basedir}/reports/TEST-vows.xml</outputFile>
+                  <successCodes>
+                    <param>0</param>
+                    <param>1</param>
+                  </successCodes>
+                </configuration>
+               </execution>
               </executions>
             </plugin>          
           </plugins>
@@ -181,7 +206,7 @@
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>exec-maven-plugin</artifactId>
-              <version>1.2.1</version>
+              <version>1.1</version>
               <executions>
                 <!-- Builds C files to node modules with node-waf --> 
                 <execution>
@@ -200,7 +225,7 @@
                     </successCodes>
                   </configuration>
                 </execution>
-                <!-- Runs Jslint validation on the javascript files -->
+                <!-- Runs jasmine node tests specified in .spec.js files in the jasmine test folder -->
                 <execution>
                   <id>jasmine-node-testing</id>
                   <phase>test</phase>
@@ -215,7 +240,42 @@
                       <param>1</param>
                     </successCodes>
                   </configuration>
-                </execution>          
+                </execution>
+                <!-- Create documentation from the jsdoc comments. Documentation will placed to folder 'jsdoc'. -->
+                <execution>
+                  <id>jsdoc</id>
+                  <phase>site</phase>
+                  <configuration>
+                    <executable>jsdoc</executable>
+                    <arguments>
+                      <argument>-r</argument>
+                      <argument>-d</argument>
+                      <argument>${basedir}/target/site/jsdoc</argument>
+                      <argument>${basedir}/lib/</argument>
+                    </arguments>
+                    <successCodes>
+                      <param>0</param>
+                      <param>1</param>
+                    </successCodes>
+                  </configuration>
+                </execution>  
+                <!-- Runs vows node tests specified in file 'test.spec.js' in the vows test folder -->
+                <execution>
+                  <id>vows-testing</id>
+                  <phase>test</phase>
+                  <configuration>
+                    <executable>vows</executable>
+                    <arguments>
+                      <argument>test/vows/test.spec.js</argument>
+                      <argument>--xunit</argument>
+                    </arguments>
+                    <outputFile>${basedir}/reports/TEST-vows.xml</outputFile>
+                    <successCodes>
+                      <param>0</param>
+                      <param>1</param>
+                    </successCodes>
+                  </configuration>
+                </execution>
               </executions>
             </plugin>        
           </plugins>
@@ -231,30 +291,4 @@
     </profile>
   </profiles>
 
-  <!-- Reporting -->
-  <reporting>
-    <!--
-    <plugins>
-      <!-- Generate JsDoc documentation -->
-      <plugin>
-        <groupId>nl.windgazer</groupId>
-        <artifactId>jsdoctk-plugin</artifactId>
-        <version>2.3.2</version>
-        <inherited>false</inherited>
-        <configuration>
-          <srcDir>${basedir}</srcDir>
-          <directory>${basedir}/target/site/jsdoc</directory>
-          <template>${basedir}/target/toolkit/templates/jsdoc</template>
-          <recurse>5</recurse>
-          <exclude>
-            <param>.*\.spec\.js</param>
-            <param>.*/cc/.*</param>
-            <param>.*/build/.*</param>
-            <param>.*/target/.*</param>
-          </exclude>
-        </configuration>
-      </plugin>
-    </plugins>
-    -->
-  </reporting>
 </project>
